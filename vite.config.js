@@ -14,7 +14,8 @@ export default defineConfig({
     port:3000,
     proxy: {
       '/api': {
-        target: 'https://inventory-management-system-opal.vercel.app',
+        // target: '',
+        target: 'https://inventory-backend-isolated.onrender.com',
         changeOrigin: true,
         secure: false,
         ws: true,
