@@ -105,7 +105,7 @@ export const Login = () => {
               </Link>
             </span>
           </div>
-          <Button type="submit">{isLoading ?<span className="flex items-center gap-2 "><LoadingIcon/> Uploading...</span> : "Login"}</Button>
+          <Button type="submit">{isLoading ?<span className="flex items-center gap-2 "><LoadingIcon/> Loading...</span> : "Login"}</Button>
         </div>
         <p className="text-sm text-center pt-3">
           Don't have account ?{" "}

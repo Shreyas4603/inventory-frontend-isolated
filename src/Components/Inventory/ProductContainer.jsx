@@ -19,63 +19,65 @@ import { Card } from "../ui/card";
 import { Link } from "react-router-dom";
 
 export const ProductContainer = () => {
-  //state
-  const [resultProducts, setresultProducts] = useState([]); //store the products from the server
-  const [displayProducts, setdisplayProducts] = useState([]); //store the products from the server
-  const [searchTerm, setSearchTerm] = useState(""); // New state for holding the search term
+// State declarations
+const [resultProducts, setresultProducts] = useState([]); // Stores fetched products
+const [displayProducts, setdisplayProducts] = useState([]); // Stores products to be displayed after filtering
+const [searchTerm, setSearchTerm] = useState(""); // Holds the current search term
 
-  //hooks
-  const { data, error, isLoading, refetch } = useGetAllProductsQuery(); //hook that does the api call and gets the products
-  
-  //useEffects
-  useEffect(() => {
-    if (data) {
-      console.log(data?.data);
-      setresultProducts(data?.data);
-      setdisplayProducts(data?.data);
-    } else if (error) {
-      toast.error("Error occured, try again");
-    }
-  }, [data, isLoading]);
+// Custom hook for API call
+const { data, error, isLoading, refetch } = useGetAllProductsQuery();
 
-  //handlers
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  // Filter products based on search term
-  useEffect(() => {
-    if (searchTerm === "") {
-      setdisplayProducts(resultProducts);
-    } else {
-      const filteredProducts = resultProducts.filter(product =>
-        product.productName.toLowerCase().includes(searchTerm.toLowerCase())||
-        product.productId.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setdisplayProducts(filteredProducts);
-    }
-  }, [searchTerm, resultProducts]);
-
-
-  //loading and Errors
-
-  if (isLoading) {
-    return (
-      <div className="font-medium text-xl text-center text-text/80 font-jakarta">
-        <span className="mr-1 flex items-center justify-center gap-1">
-          <LoadingIcon />
-          Loading products...
-        </span>
-      </div>
-    );
+// Effect to update products state when data changes
+useEffect(() => {
+  if (data) {
+    console.log(data?.data); // Log fetched data for debugging
+    setresultProducts(data?.data); // Update state with fetched products
+    setdisplayProducts(data?.data); // Also update display products initially
   } else if (error) {
-    return (
-      <div className="font-medium text-xl text-center text-red-500">
-        Error occured, try again...
-      </div>
-    );
+    toast.error("Error occurred, try again"); // Show error toast if fetch fails
   }
+}, [data, isLoading]); // Dependencies: data and isLoading
+
+// Handler for search input changes
+const handleSearchChange = (event) => {
+  setSearchTerm(event.target.value); // Update searchTerm state with input value
+};
+
+// Effect to filter products based on searchTerm
+useEffect(() => {
+  if (searchTerm === "") {
+    setdisplayProducts(resultProducts); // Reset display products if searchTerm is empty
+  } else {
+    const filteredProducts = resultProducts.filter(product =>
+      product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.productId.toLowerCase().includes(searchTerm.toLowerCase())
+    ); // Filter products by name or ID
+    setdisplayProducts(filteredProducts); // Update display products with filtered results
+  }
+}, [searchTerm, resultProducts]); // Dependencies: searchTerm and resultProducts
+
+// Render loading state
+if (isLoading) {
+  return (
+    <div className="...">
+      <span className="...">
+        <LoadingIcon />
+        Loading products...
+      </span>
+    </div>
+  );
+}
+
+// Render error state
+else if (error) {
+  return (
+    <div className="...">
+      Error occurred, try again...
+    </div>
+  );
+}
+
+// Main render
   return (
     <section >
       <div>

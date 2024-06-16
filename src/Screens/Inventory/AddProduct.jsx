@@ -24,128 +24,115 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const AddProduct = () => {
-  const productSchema = addSchema(); // Input field Schema
+// Define a schema for input validation (not shown in the provided code)
+const productSchema = addSchema();
 
-  //Hooks
-  const [uploadImage] = useUploadImageMutation(); //RTK query tht uploads image to cloudinary
-  const [addProduct] = useAddProductMutation(); //RTK query tht add a  product (METHOD=POST/PATCH/DELETE)
+// RTK Query hooks for uploading images and adding products
+const [uploadImage] = useUploadImageMutation(); // Hook for uploading images to Cloudinary
+const [addProduct] = useAddProductMutation(); // Hook for adding a product via POST/PATCH/DELETE methods
 
-  const sampleData = {
-    category: "Game",
-    minimumQuantity: 1,
-    productId: "P_123",
-    productImageURL:
-      "https://res.cloudinary.com/dhm9hywhz/image/upload/v1718562546/sample_upload/mgxyrwmjxkefri6vym9w.png",
-    productName: "valorant",
-    purchasePrice: 33,
-    salePrice: 33,
-    units: 345,
-  };
+// Sample data for demonstration purposes
+const sampleData = {
+  category: "Game",
+  minimumQuantity: 1,
+  productId: "P_123",
+  productImageURL: "https://res.cloudinary.com/dhm9hywhz/image/upload/v1718562546/sample_upload/mgxyrwmjxkefri6vym9w.png",
+  productName: "valorant",
+  purchasePrice: 33,
+  salePrice: 33,
+  units: 345,
+};
 
-  //state
-  const [product, setProduct] = useState({
-    productId: "",
-    productName: "",
-    productImageURL: "",
-    units: 0,
-    salePrice: 0,
-    purchasePrice: 0,
-    minimumQuantity: 0,
-    category: "",
-  }); //stores default values
-  const [loader, setloader] = useState({
-    uploadImageLoader: false,
-    addProductLoader: false,
-  }); //Loaders all loading process
-  const [selectedFile, setSelectedFile] = useState(null); //hold the selected file
-  const [uploadedImage, setuploadedImage] = useState(null); //Stores the Uploaded file
+// State initialization
+const [product, setProduct] = useState({ // Default values for product details
+  productId: "",
+  productName: "",
+  productImageURL: "",
+  units: 0,
+  salePrice: 0,
+  purchasePrice: 0,
+  minimumQuantity: 0,
+  category: "",
+});
+const [loader, setloader] = useState({ // Track loading states for image upload and product addition
+  uploadImageLoader: false,
+  addProductLoader: false,
+});
+const [selectedFile, setSelectedFile] = useState(null); // Hold the selected file for upload
+const [uploadedImage, setuploadedImage] = useState(null); // Store the URL of the uploaded image
 
-  //handlers
+// Handlers
 
+const handlUploadImage = async () => { // Function to handle image upload
+  setloader({...loader, uploadImageLoader: true }); // Start the upload loader
+  const formBody = new FormData(); // Prepare form data for upload
+  formBody.append("file", selectedFile); // Append the selected file
+  formBody.append("upload_preset", "product_preset"); // Specify Cloudinary preset
+  formBody.append("cloud_name", "dhm9hywhz"); // Specify Cloudinary collection name
+  formBody.append("folder", "sample_upload"); // Optional folder organization
+  try {
+    const { data, error } = await uploadImage(formBody); // Perform the upload
+    setloader({...loader, uploadImageLoader: false }); // Stop the upload loader
 
-  const handlUploadImage = async () => {
-    setloader({ ...loader, uploadImageLoader: true });
-    const formBody = new FormData();
-    formBody.append("file", selectedFile);
-    formBody.append("upload_preset", "product_preset"); //Present Name from cloudinary
-    formBody.append("cloud_name", "dhm9hywhz"); // Collection Name
-    formBody.append("folder", "sample_upload"); //Folder name (Optional) better to keep to make things organised
-    try {
-      const { data, error } = await uploadImage(formBody);
-    setloader({ ...loader, uploadImageLoader: false });
-
-      if (data) {
-        setuploadedImage(data.secure_url); //Storing the uploaded URL
-        toast.success("Image uploaded successfully");
-      } else if (error) {
-        toast.error("Failed to upload, Try again");
-      }
-    } catch (error) {
-      toast.error("Failed to upload, Try again");
-      console.log(error);
+    if (data) { // On successful upload
+      setuploadedImage(data.secure_url); // Save the secure URL of the uploaded image
+      toast.success("Image uploaded successfully"); // Notify success
+    } else if (error) { // On upload failure
+      toast.error("Failed to upload, Try again"); // Notify failure
     }
-  };
+  } catch (error) { // Catch any errors during upload
+    toast.error("Failed to upload, Try again"); // Notify failure
+    console.log(error); // Log the error for debugging
+  }
+};
 
+const handleChange = (e) => { // Function to handle input changes
+  const { name, value } = e.target; // Destructure event target
+  let convertedValue = value; // Initialize value to be set
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    let convertedValue = value;
+  // Convert value to number if the input is for numeric fields
+  if (["units", "salePrice", "purchasePrice", "minimumQuantity"].includes(name)) {
+    convertedValue = Number(value);
+  }
 
-    // Check if the input type is number and convert the value accordingly
-    if (
-      ["units", "salePrice", "purchasePrice", "minimumQuantity"].includes(name)
-    ) {
-      convertedValue = Number(value);
+  setProduct((prevState) => ({ // Update product state
+   ...prevState,
+    [name]: convertedValue, // Use dynamic key to update specific field
+  }));
+};
+
+const handleSubmit = async (e) => { // Function to handle form submission
+  e.preventDefault(); // Prevent default form submission behavior
+  try {
+    setloader({...loader,addProductLoader:true}); // Start the product addition loader
+    const { data, error } = await addProduct( // Call the mutation to add the product
+       {
+        category: product.category,
+        minimumQuantity: product.minimumQuantity,
+        productId: product.productId,
+        productImageURL: product.productImageURL,
+        productName: product.productName,
+        purchasePrice: product.purchasePrice,
+        salePrice: product.salePrice,
+        units: product.units,
+        productImageURL: uploadedImage, // Use the uploaded image URL
+      },
+    );
+    setloader({...loader,addProductLoader:false}); // Stop the product addition loader
+
+    // Handle success or failure of product addition
+    if (data) {
+      console.log("Success:", data); // Log success message
+      toast.success(data?.message); // Display success notification
+    } else if (error) {
+      console.error("Error:", error); // Log error message
+      toast.error(error?.message || "Failed to add product, try again"); // Display error notification
     }
-
-    setProduct((prevState) => ({
-      ...prevState,
-      [name]: convertedValue,
-    }));
-  };
-
-  //track the change and update the state
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Submit the form data to the server
-      setloader({...loader,addProductLoader:true})
-      const { data, error } = await addProduct(
-         {
-          category: product.category,
-          minimumQuantity: product.minimumQuantity,
-          productId: product.productId,
-          productImageURL: product.productImageURL,
-          productName: product.productName,
-          purchasePrice: product.purchasePrice,
-          salePrice: product.salePrice,
-          units: product.units,
-          productImageURL: uploadedImage,
-        },
-      );
-      setloader({...loader,addProductLoader:false})
-
-
-      // Handle success or failure
-      if (data) {
-        console.log("Success:", data);
-        toast.success(data?.message)
-      } else if (error) {
-        console.error("Error:", error);
-        toast.error(error?.message||"Failed to add product, try again")
-      }
-    } catch (error) {
-      console.error("Submission failed:", error);
-      toast.error("Failed to add product, try again")
-
-    }
-  };
-
-  //useEffects
-  useEffect(() => {
-    console.log(loader);
-  }, [loader]);
+  } catch (error) { // Catch any errors during submission
+    console.error("Submission failed:", error); // Log the error for debugging
+    toast.error("Failed to add product, try again"); // Display error notification
+  }
+};
 
   return (
     <div className="px-8 py-5 bg-inpu t/20 lg:h-[91vh] xl:h-[95vh] overflow-auto font-jakarta  mx-auto xl:w-3/4">
@@ -174,13 +161,6 @@ export const AddProduct = () => {
             {productSchema?.map((item, idx) => (
               <div className="space-y-1" key={idx}>
                 <Label>{item.label}</Label>
-                {/* <Input
-                onChange={(e)=>handleChange(e)}
-                  label={item?.label}
-                  name={item.name}
-                  type={item.type}
-                  placeholder={item.placeholder}
-                /> */}
                 <input
                   type={item.type}
                   onChange={(e) => handleChange(e)}
@@ -211,7 +191,3 @@ export const AddProduct = () => {
     </div>
   );
 };
-// <div className="p-2 rounded-md   mt-5">
-//   {/* If image link is present in the UploadedImage state display the image else display message */}
-//   {uploadedImage?<div><p className="text-xl  font-semibold text-text/60 pb-2 ">Product Image</p><img className="w-64 aspect-video rounded-md" src={uploadedImage} alt="Uploaded Image"/></div>:<p className="text-center text-text/50 font-medium text-lg">No images uploaded yet</p>}
-// </div>
