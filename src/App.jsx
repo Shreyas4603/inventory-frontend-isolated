@@ -4,7 +4,7 @@ import { PrivateRoutes } from "./Components/Utils/PrivateRoutes";
 import { SideBar } from "./Components/Common/SideBar";
 import { Navbar } from "./Components/Common/Navbar";
 import LoggedInComponents from "./Components/Utils/LoggedInComponents";
-import { Dashboard, Inventory } from "./Screens";
+import { AddProduct, Dashboard, Inventory } from "./Screens";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           <SideBar />
         </LoggedInComponents>
 
-        <div className="   flex-1  lg:h-[89.3vh] 2xl:h-[93vh] overflow-hidden h-screen">
+        <div className="   flex-1  lg:h-[89.3vh] 2xl:h-[93vh] overflow-hidden h-screen font-jakarta">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -26,6 +26,7 @@ function App() {
             <Route path="/" element={<PrivateRoutes />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory" element={<Inventory />} />
+              <Route path="/add-product" element={<AddProduct />} />
             </Route>
           </Routes>
         </div>

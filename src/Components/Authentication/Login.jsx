@@ -8,6 +8,7 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setUserCredentials } from "@/Slices/authSlice";
 import { toast } from "sonner";
+import { LoadingIcon } from "@/assets/loaderIcon";
 
 export const Login = () => {
   //statye variables
@@ -104,7 +105,7 @@ export const Login = () => {
               </Link>
             </span>
           </div>
-          <Button type="submit">{isLoading ? <div /> : "Login"}</Button>
+          <Button type="submit">{isLoading ?<span className="flex items-center gap-2 "><LoadingIcon/> Uploading...</span> : "Login"}</Button>
         </div>
         <p className="text-sm text-center pt-3">
           Don't have account ?{" "}

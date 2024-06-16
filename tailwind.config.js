@@ -2,10 +2,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
+    "./pages/**/*.{js,jsx}",
+    "./components/**/*.{js,jsx}",
+    "./app/**/*.{js,jsx}",
+    "./src/**/*.{js,jsx}",
   ],
   prefix: "",
   theme: {
@@ -73,10 +73,12 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        'teachers': ['"Teachers"', 'sans-serif'],
-        'open': ['"Open Sans"', 'sans-serif'],
+        // teachers: ['"Teachers"', "sans-serif"],
+        // open: ['"Open Sans"', "sans-serif"],
+        // sans: ["Source Sans 3", "ui-sans-serif", "system-ui"],
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};

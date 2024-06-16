@@ -12,7 +12,7 @@ const SidebarItem = ({ isOpen, name, icon, link }) => {
       <li
         className={`
           relative flex items-center py-2 px-3 my-1
-          rounded-md cursor-pointer
+          rounded-md cursor-pointer font-jakarta
           transition-colors group
           ${
             active === link

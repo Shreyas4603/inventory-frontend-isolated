@@ -22,7 +22,7 @@ const LowStock = ({ isOpen }) => {
         className={`
           relative flex items-center py-2 px-3 my-1 
           rounded-md cursor-pointer
-          transition-colors group
+          transition-colors group font-jakarta
           ${
             active === "/low-stock"
               ? "bg-primary/30 text-orange-600 font-semibold"
@@ -33,7 +33,7 @@ const LowStock = ({ isOpen }) => {
         
         {isOpen ? icon : <div className=" relative">{icon} <Badge className={'p-1 py-0 absolute -top-2 left-3'} variant={"destructive"}>{alerts}</Badge></div>}
         <span
-          className={`flex items-center justify-between overflow-hidden transition-all line-clamp-1 ${
+          className={`flex items-center justify-between overflow-hidden transition-all line-clamp-1  ${
             isOpen ? "w-52 ml-3" : "w-0 h-0"
           }`}
         >
