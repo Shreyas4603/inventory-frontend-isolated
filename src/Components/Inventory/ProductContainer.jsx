@@ -16,13 +16,18 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const ProductContainer = () => {
 // State declarations
 const [resultProducts, setresultProducts] = useState([]); // Stores fetched products
 const [displayProducts, setdisplayProducts] = useState([]); // Stores products to be displayed after filtering
 const [searchTerm, setSearchTerm] = useState(""); // Holds the current search term
+
+
+//React Hooks
+const navigate=useNavigate()
+
 
 // Custom hook for API call
 const { data, error, isLoading, refetch } = useGetAllProductsQuery();
@@ -56,11 +61,16 @@ useEffect(() => {
   }
 }, [searchTerm, resultProducts]); // Dependencies: searchTerm and resultProducts
 
+//Handlers
+const handleClick=(id)=>{
+  navigate(`${id}`)
+}
+
 // Render loading state
 if (isLoading) {
   return (
     <div className="...">
-      <span className="...">
+      <span className="flex items-center justify-center gap-2">
         <LoadingIcon />
         Loading products...
       </span>
@@ -120,7 +130,7 @@ else if (error) {
               </TableHeader>
               <TableBody>
                 {displayProducts?.map((item, idx) => (
-                  <TableRow key={idx} className='border-input'>
+                  <TableRow key={idx} className='border-input' onClick={()=>handleClick(item._id)}>
                     <TableCell>
                       {idx+1}
                     </TableCell>

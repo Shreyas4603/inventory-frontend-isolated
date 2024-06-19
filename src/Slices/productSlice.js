@@ -9,7 +9,7 @@ export const productSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllProducts: builder.query({
       query: () => ({
-        url: `${PRODUCT_URL}/getall`,
+        url: `/${PRODUCT_URL}/getall`,
         method: "GET",
 
       }),
@@ -31,6 +31,20 @@ export const productSlice = apiSlice.injectEndpoints({
         body:body,
       }),
     }),
+    getOneProduct: builder.query({
+      query: (id) => ({
+        url: `/${PRODUCT_URL}/get/${id}`,
+        method: "GET",
+      }),
+    }),
+
+    updateProduct: builder.mutation({
+      query: (body) => ({
+        url: `/${PRODUCT_URL}/update`,
+        method: "PUT",
+        body:body,
+      }),
+    }),
    
   }),
 });
@@ -38,7 +52,10 @@ export const productSlice = apiSlice.injectEndpoints({
 export const {
 useGetAllProductsQuery,
 useUploadImageMutation,
-useAddProductMutation
+useAddProductMutation,
+useGetOneProductQuery,
+useUpdateProductMutation
+
 } = productSlice;
 
 // Create our own endpoints in this file and it will inject them into the endpoints in the apiSlice file
