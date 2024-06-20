@@ -61,7 +61,7 @@ export const ImageSelectComponent = ({file,setFile}) => {
             </div>
           )}
         </label>
-      </div> 
+      </div>  
     </div>
   );
 };
