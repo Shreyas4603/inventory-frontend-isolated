@@ -11,11 +11,11 @@ export default defineConfig({
     },
   },
   server: {
-    port:3000,
+    port: 3000,
     proxy: {
       '/api': {
-        // target: 'http://localhost:8080',
-        target: 'https://inventory-backend-isolated.onrender.com',
+        target: 'http://localhost:8080',
+        // target: 'https://inventory-backend-isolated.onrender.com',
         changeOrigin: true,
         secure: false,
         ws: true,
