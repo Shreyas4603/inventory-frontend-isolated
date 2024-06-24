@@ -15,18 +15,11 @@ export const productSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    getLowProducts: builder.query({
-      query: () => ({
-        url: `/${PRODUCT_URL}/getlow`,
-        method: "GET",
-
-      }),
-    }),
     uploadImage: builder.mutation({
       query: (body) => ({
         url: `https://api.cloudinary.com/v1_1/dhm9hywhz/image/upload/`,//v1_1/<cloud_name>/image/upload
         method: "POST",
-        body: body,
+        body:body,
         // credentials : "include"
       }),
     }),
@@ -35,7 +28,7 @@ export const productSlice = apiSlice.injectEndpoints({
       query: (body) => ({
         url: `${PRODUCT_URL}/create`,
         method: "POST",
-        body: body,
+        body:body,
       }),
     }),
     getOneProduct: builder.query({
@@ -49,20 +42,19 @@ export const productSlice = apiSlice.injectEndpoints({
       query: (body) => ({
         url: `/${PRODUCT_URL}/update`,
         method: "PUT",
-        body: body,
+        body:body,
       }),
     }),
-
+   
   }),
 });
 
 export const {
-  useGetAllProductsQuery,
-  useGetLowProductsQuery,
-  useUploadImageMutation,
-  useAddProductMutation,
-  useGetOneProductQuery,
-  useUpdateProductMutation
+useGetAllProductsQuery,
+useUploadImageMutation,
+useAddProductMutation,
+useGetOneProductQuery,
+useUpdateProductMutation
 
 } = productSlice;
 
