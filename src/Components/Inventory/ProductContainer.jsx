@@ -138,11 +138,7 @@ else if (error) {
                       {item.productId}
                     </TableCell>
                     <TableCell>{item.productName}</TableCell>
-<<<<<<< HEAD
                     <TableCell>{(item.units<item.minimumQuantity) ? <Badge className={'bg-red-700 hover:bg-red-900'} > Low stock</Badge> : <Badge className={'bg-green-700 hover:bg-green-900'} > In stock</Badge>}</TableCell>
-=======
-                    <TableCell>{item.lowOnStock ? <Badge variant={'destructive'} >Low</Badge>:<Badge className={'bg-green-700'} > In stock</Badge>}</TableCell>
->>>>>>> f666f572778d067c4f5f71f0ddb0df0d0f75f281
                     <TableCell >{item.purchasePrice}</TableCell>
                     <TableCell >{item.salePrice}</TableCell>
                     <TableCell className=''>{item.minimumQuantity}</TableCell>
