@@ -8,8 +8,8 @@ const baseQuery = fetchBaseQuery({ baseUrl: '' }); // Set your backend server UR
 >>>>>>> f666f572778d067c4f5f71f0ddb0df0d0f75f281
 
 export const apiSlice = createApi({
-  baseQuery,
-  tagTypes: ['User'], // used for caching instead of fetching everytime from database
-  endpoints: (builder) => ({}),
+    baseQuery,
+    tagTypes: ['User'], // used for caching instead of fetching everytime from database
+    endpoints: (builder) => ({}),
     refetchOnMountOrArgChange:true,
 })
