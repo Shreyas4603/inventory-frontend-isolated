@@ -72,7 +72,7 @@ export const OrdersPage = () => {
   
     //Handlers
     const handleClick = (id) => {
-      navigate(`/updateorders/${id}`)
+      navigate(`/orders/${id}`)
     }
   
     // Render loading state
