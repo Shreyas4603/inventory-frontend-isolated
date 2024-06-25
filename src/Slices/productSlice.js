@@ -14,6 +14,13 @@ export const productSlice = apiSlice.injectEndpoints({
 
       }),
     }),
+    getLowProducts: builder.query({
+      query: () => ({
+        url: `/${PRODUCT_URL}/getlow`,
+        method: "GET",
+
+      }),
+    }),
 
     uploadImage: builder.mutation({
       query: (body) => ({
@@ -51,6 +58,7 @@ export const productSlice = apiSlice.injectEndpoints({
 
 export const {
 useGetAllProductsQuery,
+useGetLowProductsQuery,
 useUploadImageMutation,
 useAddProductMutation,
 useGetOneProductQuery,

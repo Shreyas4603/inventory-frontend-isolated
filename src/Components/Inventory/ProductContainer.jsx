@@ -1,4 +1,4 @@
-import { useGetAllProductsQuery } from "@/Slices/productSlice";
+import { useGetAllProductsQuery, useGetLowProductsQuery } from "@/Slices/productSlice";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -19,75 +19,83 @@ import { Card } from "../ui/card";
 import { Link, useNavigate } from "react-router-dom";
 
 export const ProductContainer = () => {
-// State declarations
-const [resultProducts, setresultProducts] = useState([]); // Stores fetched products
-const [displayProducts, setdisplayProducts] = useState([]); // Stores products to be displayed after filtering
-const [searchTerm, setSearchTerm] = useState(""); // Holds the current search term
+  // State declarations
+  const [resultProducts, setresultProducts] = useState([]); // Stores fetched products
+  const [displayProducts, setdisplayProducts] = useState([]); // Stores products to be displayed after filtering
+  const [searchTerm, setSearchTerm] = useState(""); // Holds the current search term
+  const [needLow, setNeedLow] = useState(false); // Holds the current search term
 
 
-//React Hooks
-const navigate=useNavigate()
+  //React Hooks
+  const navigate = useNavigate()
+  // Custom hook for API call
+  const { data, error, isLoading, refetch } = useGetAllProductsQuery();
+  const { data: data_Low, error: error_Low, isLoading: isLoading_Low, refetch: refetch_Low } = useGetLowProductsQuery();
+  useEffect(() => {
+    console.log(data, data_Low)
+    if (data && data_Low) {
+      if (needLow) {
+        setresultProducts(data_Low?.data); // Update state with fetched products
+        setdisplayProducts(data_Low?.data); // Also update display products initially
+      }
+      else {
+        setresultProducts(data?.data); // Update state with fetched products
+        setdisplayProducts(data?.data); // Also update display products initially
+      }
+    }
+    else if (error) {
+      toast.error("Error occurred, try again"); // Show error toast if fetch fails
+    }
+  }, [data, isLoading, data_Low, isLoading_Low, needLow]); // Dependencies: data and isLoading
 
+  // Handler for search input changes
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value); // Update searchTerm state with input value
+  };
+  const handleProdClick = () => {
+    setNeedLow(prevState => !prevState);
+    console.log(needLow)
+  };
+  // Effect to filter products based on searchTerm
+  useEffect(() => {
+    if (searchTerm === "") {
+      setdisplayProducts(resultProducts); // Reset display products if searchTerm is empty
+    } else {
+      const filteredProducts = resultProducts.filter(product =>
+        product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.productId.toLowerCase().includes(searchTerm.toLowerCase())
+      ); // Filter products by name or ID
+      setdisplayProducts(filteredProducts); // Update display products with filtered results
+    }
+  }, [searchTerm, resultProducts]); // Dependencies: searchTerm and resultProducts
 
-// Custom hook for API call
-const { data, error, isLoading, refetch } = useGetAllProductsQuery();
-
-// Effect to update products state when data changes
-useEffect(() => {
-  if (data) {
-    console.log(data?.data); // Log fetched data for debugging
-    setresultProducts(data?.data); // Update state with fetched products
-    setdisplayProducts(data?.data); // Also update display products initially
-  } else if (error) {
-    toast.error("Error occurred, try again"); // Show error toast if fetch fails
+  //Handlers
+  const handleClick = (id) => {
+    navigate(`${id}`)
   }
-}, [data, isLoading]); // Dependencies: data and isLoading
 
-// Handler for search input changes
-const handleSearchChange = (event) => {
-  setSearchTerm(event.target.value); // Update searchTerm state with input value
-};
-
-// Effect to filter products based on searchTerm
-useEffect(() => {
-  if (searchTerm === "") {
-    setdisplayProducts(resultProducts); // Reset display products if searchTerm is empty
-  } else {
-    const filteredProducts = resultProducts.filter(product =>
-      product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.productId.toLowerCase().includes(searchTerm.toLowerCase())
-    ); // Filter products by name or ID
-    setdisplayProducts(filteredProducts); // Update display products with filtered results
+  // Render loading state
+  if (isLoading) {
+    return (
+      <div className="...">
+        <span className="flex items-center justify-center gap-2">
+          <LoadingIcon />
+          Loading products...
+        </span>
+      </div>
+    );
   }
-}, [searchTerm, resultProducts]); // Dependencies: searchTerm and resultProducts
 
-//Handlers
-const handleClick=(id)=>{
-  navigate(`${id}`)
-}
+  // Render error state
+  else if (error) {
+    return (
+      <div className="...">
+        Error occurred, try again...
+      </div>
+    );
+  }
 
-// Render loading state
-if (isLoading) {
-  return (
-    <div className="...">
-      <span className="flex items-center justify-center gap-2">
-        <LoadingIcon />
-        Loading products...
-      </span>
-    </div>
-  );
-}
-
-// Render error state
-else if (error) {
-  return (
-    <div className="...">
-      Error occurred, try again...
-    </div>
-  );
-}
-
-// Main render
+  // Main render
   return (
     <section >
       <div>
@@ -108,7 +116,23 @@ else if (error) {
               onChange={handleSearchChange}
             />
           </div>
-          <div><Link to='/add-product' className='flex gap-2 items-center bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md'> <span><PlusCircle/></span>Add product</Link></div>
+
+          <div className="flex gap-2 items-center">
+            <Link
+              to='/add-product'
+              className='bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center'
+            >
+              <span><PlusCircle /></span>
+              Add product
+            </Link>
+            <button
+              onClick={() => handleProdClick()}
+              className='bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center'
+            >
+              Toggle Low Stocks
+            </button>
+          </div>
+
         </div>
         <div>
           <Card className='border border-input'>
@@ -130,24 +154,24 @@ else if (error) {
               </TableHeader>
               <TableBody>
                 {displayProducts?.map((item, idx) => (
-                  <TableRow key={idx} className='border-input' onClick={()=>handleClick(item._id)}>
+                  <TableRow key={idx} className='border-input' onClick={() => handleClick(item._id)}>
                     <TableCell>
-                      {idx+1}
+                      {idx + 1}
                     </TableCell>
                     <TableCell>
                       {item.productId}
                     </TableCell>
                     <TableCell>{item.productName}</TableCell>
-                    <TableCell>{(item.units<item.minimumQuantity) ? <Badge className={'bg-red-700 hover:bg-red-900'} > Low stock</Badge> : <Badge className={'bg-green-700 hover:bg-green-900'} > In stock</Badge>}</TableCell>
+                    <TableCell>{item.units<item.minimumQuantity ? <Badge className={'bg-red-700'} > Low stock</Badge> : <Badge className={'bg-green-700'} > In stock</Badge>}</TableCell>
                     <TableCell >{item.purchasePrice}</TableCell>
                     <TableCell >{item.salePrice}</TableCell>
                     <TableCell className=''>{item.minimumQuantity}</TableCell>
                     <TableCell>{item.units}</TableCell>
-                    
+
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <Button size='icon' className='' variant='secondary'> <Edit   className="w-5"/></Button>
-                        <Button size='icon' className='' variant='destructive'> <LucideTrash   className="w-5"/></Button>
+                        <Button size='icon' className='' variant='secondary'> <Edit className="w-5" /></Button>
+                        <Button size='icon' className='' variant='destructive'> <LucideTrash className="w-5" /></Button>
                       </div>
                     </TableCell>
                   </TableRow>
