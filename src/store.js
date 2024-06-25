@@ -6,8 +6,8 @@ import sideBarOpenReducer from "./Slices/sidebarOpenSlice"
 
 const store = configureStore({
   reducer: {
-    auth:authReducer,
-    sideBarOpen:sideBarOpenReducer,
+    auth: authReducer,
+    sideBarOpen: sideBarOpenReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

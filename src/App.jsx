@@ -1,10 +1,10 @@
-import {  Login, Register } from "./Components";
+import { Login, Register } from "./Components";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PrivateRoutes } from "./Components/Utils/PrivateRoutes";
 import { SideBar } from "./Components/Common/SideBar";
 import { Navbar } from "./Components/Common/Navbar";
 import LoggedInComponents from "./Components/Utils/LoggedInComponents";
-import { AddProduct, Dashboard, Inventory, ViewAndEditProduct } from "./Screens";
+import { AddProduct, Dashboard, Inventory, LowStockPage, ViewAndEditProduct } from "./Screens";
 
 function App() {
   return (
@@ -26,6 +26,7 @@ function App() {
             <Route path="/" element={<PrivateRoutes />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory" element={<Inventory />} />
+              <Route path="/low-stock" element={<LowStockPage />} />
               <Route path="/inventory/:id" element={<ViewAndEditProduct />} />
               <Route path="/add-product" element={<AddProduct />} />
             </Route>
