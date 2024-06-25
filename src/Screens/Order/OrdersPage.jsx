@@ -1,9 +1,10 @@
+
 import { useGetAllProductsQuery, useGetLowProductsQuery } from "@/Slices/productSlice";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { LoadingIcon } from "@/assets/loaderIcon";
-import { Input } from "../ui/input";
+import { Input } from "@/Components/ui/input";
 import { Edit, LucideTrash, PlusCircle, Search, Trash } from "lucide-react";
 import {
   Table,
@@ -12,96 +13,95 @@ import {
   TableHeader,
   TableRow,
   TableCell,
-} from "../ui/table";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
+} from "@/Components/ui/table";
+import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
+import { Card } from "@/Components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 
-export const ProductContainer = () => {
-  // State declarations
-  const [resultProducts, setresultProducts] = useState([]); // Stores fetched products
-  const [displayProducts, setdisplayProducts] = useState([]); // Stores products to be displayed after filtering
-  const [searchTerm, setSearchTerm] = useState(""); // Holds the current search term
-  const [needLow, setNeedLow] = useState(false); // Holds the current search term
-
-
-  //React Hooks
-  const navigate = useNavigate()
-  // Custom hook for API call
-  const { data, error, isLoading, refetch } = useGetAllProductsQuery();
-  const { data: data_Low, error: error_Low, isLoading: isLoading_Low, refetch: refetch_Low } = useGetLowProductsQuery();
-  useEffect(() => {
-    console.log(data, data_Low)
-    if (data && data_Low) {
-      if (needLow) {
-        setresultProducts(data_Low?.data); // Update state with fetched products
-        setdisplayProducts(data_Low?.data); // Also update display products initially
+export const OrdersPage = () => {
+    // State declarations
+    const [resultProducts, setresultProducts] = useState([]); // Stores fetched products
+    const [displayProducts, setdisplayProducts] = useState([]); // Stores products to be displayed after filtering
+    const [searchTerm, setSearchTerm] = useState(""); // Holds the current search term
+    const [needLow, setNeedLow] = useState(false); // Holds the current search term
+  
+  
+    //React Hooks
+    const navigate = useNavigate()
+    // Custom hook for API call
+    const { data, error, isLoading, refetch } = useGetLowProductsQuery();
+    const { data: data_Low, error: error_Low, isLoading: isLoading_Low, refetch: refetch_Low } = useGetLowProductsQuery();
+    useEffect(() => {
+      console.log(data, data_Low)
+      if (data && data_Low) {
+        if (needLow) {
+          setresultProducts(data_Low?.data); // Update state with fetched products
+          setdisplayProducts(data_Low?.data); // Also update display products initially
+        }
+        else {
+          setresultProducts(data?.data); // Update state with fetched products
+          setdisplayProducts(data?.data); // Also update display products initially
+        }
       }
-      else {
-        setresultProducts(data?.data); // Update state with fetched products
-        setdisplayProducts(data?.data); // Also update display products initially
+      else if (error) {
+        toast.error("Error occurred, try again"); // Show error toast if fetch fails
       }
+    }, [data, isLoading, data_Low, isLoading_Low, needLow]); // Dependencies: data and isLoading
+  
+    // Handler for search input changes
+    const handleSearchChange = (event) => {
+      setSearchTerm(event.target.value); // Update searchTerm state with input value
+    };
+    const handleProdClick = () => {
+      setNeedLow(prevState => !prevState);
+      console.log(needLow)
+    };
+    // Effect to filter products based on searchTerm
+    useEffect(() => {
+      if (searchTerm === "") {
+        setdisplayProducts(resultProducts); // Reset display products if searchTerm is empty
+      } else {
+        const filteredProducts = resultProducts.filter(product =>
+          product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.productId.toLowerCase().includes(searchTerm.toLowerCase())
+        ); // Filter products by name or ID
+        setdisplayProducts(filteredProducts); // Update display products with filtered results
+      }
+    }, [searchTerm, resultProducts]); // Dependencies: searchTerm and resultProducts
+  
+    //Handlers
+    const handleClick = (id) => {
+      navigate(`/orders/${id}`)
     }
+  
+    // Render loading state
+    if (isLoading) {
+      return (
+        <div className="...">
+          <span className="flex items-center justify-center gap-2">
+            <LoadingIcon />
+            Loading products...
+          </span>
+        </div>
+      );
+    }
+  
+    // Render error state
     else if (error) {
-      toast.error("Error occurred, try again"); // Show error toast if fetch fails
+      return (
+        <div className="...">
+          Error occurred, try again...
+        </div>
+      );
     }
-  }, [data, isLoading, data_Low, isLoading_Low, needLow]); // Dependencies: data and isLoading
-
-  // Handler for search input changes
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value); // Update searchTerm state with input value
-  };
-  const handleProdClick = () => {
-    setNeedLow(prevState => !prevState);
-    console.log(needLow)
-  };
-  // Effect to filter products based on searchTerm
-  useEffect(() => {
-    if (searchTerm === "") {
-      setdisplayProducts(resultProducts); // Reset display products if searchTerm is empty
-    } else {
-      const filteredProducts = resultProducts.filter(product =>
-        product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.productId.toLowerCase().includes(searchTerm.toLowerCase())
-      ); // Filter products by name or ID
-      setdisplayProducts(filteredProducts); // Update display products with filtered results
-    }
-  }, [searchTerm, resultProducts]); // Dependencies: searchTerm and resultProducts
-
-  //Handlers
-  const handleClick = (id) => {
-    navigate(`${id}`)
-  }
-
-  // Render loading state
-  if (isLoading) {
-    return (
-      <div className="...">
-        <span className="flex items-center justify-center gap-2">
-          <LoadingIcon />
-          Loading products...
-        </span>
-      </div>
-    );
-  }
-
-  // Render error state
-  else if (error) {
-    return (
-      <div className="...">
-        Error occurred, try again...
-      </div>
-    );
-  }
-
-  // Main render
+  
   return (
     <section >
       <div>
-        <p className="text-4xl font-semibold">All Products</p>
+        <p className="text-4xl font-semibold">Low Products</p>
         <p className="text-text/70">
-          Manage your products and view stock data.
+          Order low stock items
         </p>
       </div>
 
@@ -123,7 +123,7 @@ export const ProductContainer = () => {
               className='bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center'
             >
               <span><PlusCircle /></span>
-              Add product
+              Order Products
             </Link>
             <button
               onClick={() => handleProdClick()}
@@ -162,7 +162,7 @@ export const ProductContainer = () => {
                       {item.productId}
                     </TableCell>
                     <TableCell>{item.productName}</TableCell>
-                    <TableCell>{item.units<item.minimumQuantity ? <Badge className={'bg-red-700 hover:bg-red-900'} > Low stock</Badge> : <Badge className={'bg-green-700 hover:bg-green-900'} > In stock</Badge>}</TableCell>
+                    <TableCell>{item.units<item.minimumQuantity ? <Badge className={'bg-red-700 hover:bg-red-900'} > Low stock</Badge> : <Badge className={'bg-green-700 hover:bg-red-900'} > In stock</Badge>}</TableCell>
                     <TableCell >{item.purchasePrice}</TableCell>
                     <TableCell >{item.salePrice}</TableCell>
                     <TableCell className=''>{item.minimumQuantity}</TableCell>
@@ -171,7 +171,7 @@ export const ProductContainer = () => {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Button size='icon' className='' variant='secondary'> <Edit className="w-5" /></Button>
-                        <Button size='icon' className='' variant='destructive'> <LucideTrash className="w-5" /></Button>
+                        <Button size='icon' className='bg-green-700 hover:bg-green-900' variant='destructive'> <PlusCircle className="w-5" /></Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -184,4 +184,4 @@ export const ProductContainer = () => {
       </div>
     </section>
   );
-};
+}
