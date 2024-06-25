@@ -27,6 +27,11 @@ export const SideBar = () => {
       link: "/inventory",
       icon: <Package2Icon className="w-5" />,
     },
+    {
+      name: "Orders", //u can see n n add products
+      link: "/orders",
+      icon: <Package2Icon className="w-5" />,
+    }
   ];
 
   return (
@@ -43,7 +48,7 @@ export const SideBar = () => {
             />
           ))}
         </ul>
-        <LowStock isOpen={isOpen} />
+        {/* <LowStock isOpen={isOpen} /> */}
       </nav>
     </aside>
   );
