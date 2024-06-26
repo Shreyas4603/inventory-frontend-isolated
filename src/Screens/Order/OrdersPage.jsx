@@ -97,7 +97,7 @@ export const OrdersPage = () => {
     }
   
   return (
-    <section >
+    <section className="px-8 py-5">
       <div>
         <p className="text-4xl font-semibold">Low Products</p>
         <p className="text-text/70">
@@ -105,7 +105,7 @@ export const OrdersPage = () => {
         </p>
       </div>
 
-      <div className="bg-red-9 00 ">
+      <div className=" ">
         <div className="py-3 flex items-center justify-start gap-3">
           <div className="relative   ">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -154,7 +154,7 @@ export const OrdersPage = () => {
               </TableHeader>
               <TableBody>
                 {displayProducts?.map((item, idx) => (
-                  <TableRow key={idx} className='border-input' onClick={() => handleClick(item._id)}>
+                  <TableRow key={idx} className='border-input odd:bg-white/10 hover:bg-black' onClick={() => handleClick(item._id)}>
                     <TableCell>
                       {idx + 1}
                     </TableCell>
