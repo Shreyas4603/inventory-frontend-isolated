@@ -1,4 +1,7 @@
-import { useGetAllProductsQuery, useGetLowProductsQuery } from "@/Slices/productSlice";
+import {
+  useGetAllProductsQuery,
+  useGetLowProductsQuery,
+} from "@/Slices/productSlice";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -25,25 +28,27 @@ export const ProductContainer = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Holds the current search term
   const [needLow, setNeedLow] = useState(false); // Holds the current search term
 
-
   //React Hooks
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // Custom hook for API call
   const { data, error, isLoading, refetch } = useGetAllProductsQuery();
-  const { data: data_Low, error: error_Low, isLoading: isLoading_Low, refetch: refetch_Low } = useGetLowProductsQuery();
+  const {
+    data: data_Low,
+    error: error_Low,
+    isLoading: isLoading_Low,
+    refetch: refetch_Low,
+  } = useGetLowProductsQuery();
   useEffect(() => {
-    console.log(data, data_Low)
+    console.log(data, data_Low);
     if (data && data_Low) {
       if (needLow) {
         setresultProducts(data_Low?.data); // Update state with fetched products
         setdisplayProducts(data_Low?.data); // Also update display products initially
-      }
-      else {
+      } else {
         setresultProducts(data?.data); // Update state with fetched products
         setdisplayProducts(data?.data); // Also update display products initially
       }
-    }
-    else if (error) {
+    } else if (error) {
       toast.error("Error occurred, try again"); // Show error toast if fetch fails
     }
   }, [data, isLoading, data_Low, isLoading_Low, needLow]); // Dependencies: data and isLoading
@@ -53,17 +58,20 @@ export const ProductContainer = () => {
     setSearchTerm(event.target.value); // Update searchTerm state with input value
   };
   const handleProdClick = () => {
-    setNeedLow(prevState => !prevState);
-    console.log(needLow)
+    setNeedLow((prevState) => !prevState);
+    console.log(needLow);
   };
   // Effect to filter products based on searchTerm
   useEffect(() => {
     if (searchTerm === "") {
       setdisplayProducts(resultProducts); // Reset display products if searchTerm is empty
     } else {
-      const filteredProducts = resultProducts.filter(product =>
-        product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.productId.toLowerCase().includes(searchTerm.toLowerCase())
+      const filteredProducts = resultProducts.filter(
+        (product) =>
+          product.productName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          product.productId.toLowerCase().includes(searchTerm.toLowerCase())
       ); // Filter products by name or ID
       setdisplayProducts(filteredProducts); // Update display products with filtered results
     }
@@ -71,8 +79,8 @@ export const ProductContainer = () => {
 
   //Handlers
   const handleClick = (id) => {
-    navigate(`${id}`)
-  }
+    navigate(`${id}`);
+  };
 
   // Render loading state
   if (isLoading) {
@@ -88,16 +96,12 @@ export const ProductContainer = () => {
 
   // Render error state
   else if (error) {
-    return (
-      <div className="...">
-        Error occurred, try again...
-      </div>
-    );
+    return <div className="...">Error occurred, try again...</div>;
   }
 
   // Main render
   return (
-    <section >
+    <section>
       <div>
         <p className="text-4xl font-semibold">All Products</p>
         <p className="text-text/70">
@@ -119,33 +123,34 @@ export const ProductContainer = () => {
 
           <div className="flex gap-2 items-center">
             <Link
-              to='/add-product'
-              className='bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center'
+              to="/add-product"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center"
             >
-              <span><PlusCircle /></span>
+              <span>
+                <PlusCircle />
+              </span>
               Add product
             </Link>
             <button
               onClick={() => handleProdClick()}
-              className='bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center'
+              className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center"
             >
               Toggle Low Stocks
             </button>
           </div>
-
         </div>
         <div>
-          <Card className='border border-input'>
+          <Card className="border border-input">
             <Table>
               <TableHeader>
-                <TableRow className='border-input'>
+                <TableRow className="border-input">
                   <TableHead>Sl no.</TableHead>
                   <TableHead>Product Id</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Stoct status</TableHead>
                   <TableHead>Purchase Price</TableHead>
                   <TableHead>Sale Price</TableHead>
-                  <TableHead className=''>Minimum Quantity</TableHead>
+                  <TableHead className="">Minimum Quantity</TableHead>
                   <TableHead>Units</TableHead>
                   <TableHead>
                     <span className="">Actions</span>
@@ -154,29 +159,46 @@ export const ProductContainer = () => {
               </TableHeader>
               <TableBody>
                 {displayProducts?.map((item, idx) => (
-                  <TableRow key={idx} className='border-input odd:bg-white/10 hover:bg-black' onClick={() => handleClick(item._id)} >
-                    <TableCell>
-                      {idx + 1}
-                    </TableCell>
-                    <TableCell>
-                      {item.productId}
-                    </TableCell>
+                  <TableRow
+                    key={idx}
+                    className="border-input odd:bg-white/10 dark:hover:bg-black odd:bg-gray-100"
+                    onClick={() => handleClick(item._id)}
+                  >
+                    <TableCell>{idx + 1}</TableCell>
+                    <TableCell>{item.productId}</TableCell>
                     <TableCell>{item.productName}</TableCell>
-                    <TableCell>{item.units<item.minimumQuantity ? <Badge className={'bg-red-700 hover:bg-red-900'} > Low stock</Badge> : <Badge className={'bg-green-700 hover:bg-green-900'} > In stock</Badge>}</TableCell>
-                    <TableCell >{item.purchasePrice}</TableCell>
-                    <TableCell >{item.salePrice}</TableCell>
-                    <TableCell className=''>{item.minimumQuantity}</TableCell>
+                    <TableCell>
+                      {item.units < item.minimumQuantity ? (
+                        <Badge className={"bg-red-700 hover:bg-red-900"}>
+                          {" "}
+                          Low stock
+                        </Badge>
+                      ) : (
+                        <Badge className={"bg-green-700 hover:bg-green-900"}>
+                          {" "}
+                          In stock
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>{item.purchasePrice}</TableCell>
+                    <TableCell>{item.salePrice}</TableCell>
+                    <TableCell className="">{item.minimumQuantity}</TableCell>
                     <TableCell>{item.units}</TableCell>
 
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <Button size='icon' className='' variant='secondary'> <Edit className="w-5" /></Button>
-                        <Button size='icon' className='' variant='destructive'> <LucideTrash className="w-5" /></Button>
+                        <Button size="icon" className="" variant="secondary">
+                          {" "}
+                          <Edit className="w-5" />
+                        </Button>
+                        <Button size="icon" className="" variant="destructive">
+                          {" "}
+                          <LucideTrash className="w-5" />
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
                 ))}
-
               </TableBody>
             </Table>
           </Card>
