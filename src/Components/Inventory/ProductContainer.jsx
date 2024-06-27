@@ -161,7 +161,7 @@ export const ProductContainer = () => {
                 {displayProducts?.map((item, idx) => (
                   <TableRow
                     key={idx}
-                    className="border-input odd:bg-white/10 dark:hover:bg-black odd:bg-gray-100"
+                    className="border-input odd:bg-white/10 dark:hover:bg-black "
                     onClick={() => handleClick(item._id)}
                   >
                     <TableCell>{idx + 1}</TableCell>
