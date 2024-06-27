@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { LoadingIcon } from "@/assets/loaderIcon";
 import { Input } from "../ui/input";
-import { Edit, LucideTrash, PlusCircle, Search, Trash } from "lucide-react";
+import { Edit, LucideTrash,Filter, PlusCircle, Search, Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -135,7 +135,7 @@ export const ProductContainer = () => {
               onClick={() => handleProdClick()}
               className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md flex items-center justify-center"
             >
-              Toggle Low Stocks
+             <Filter></Filter> 
             </button>
           </div>
         </div>
@@ -161,7 +161,7 @@ export const ProductContainer = () => {
                 {displayProducts?.map((item, idx) => (
                   <TableRow
                     key={idx}
-                    className="border-input odd:bg-white/10 dark:hover:bg-black odd:bg-gray-100"
+                    className="border-input odd:bg-white/10 odd:bg-gray-100 dark:hover:bg-black dark:odd:bg-black"
                     onClick={() => handleClick(item._id)}
                   >
                     <TableCell>{idx + 1}</TableCell>
@@ -202,8 +202,8 @@ export const ProductContainer = () => {
               </TableBody>
             </Table>
           </Card>
-        </div>
-      </div>
-    </section>
+            </div>
+          </div>
+    </section  >
   );
 };
