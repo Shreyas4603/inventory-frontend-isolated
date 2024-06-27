@@ -158,7 +158,7 @@ export const OrdersPage = () => {
                 {displayProducts?.map((item, idx) => (
                   <TableRow
                     key={idx}
-                    className="border-input dark:odd:bg-white/10 dark:hover:bg-black odd:bg-gray-100"
+                    className="border-input dark:odd:bg-black dark:hover:bg-black odd:bg-gray-100"
                     onClick={() => handleClick(item._id)}
                   >
                     <TableCell>{idx + 1}</TableCell>
