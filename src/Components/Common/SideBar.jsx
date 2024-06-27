@@ -52,15 +52,6 @@ export const SideBar = () => {
           {/* <LowStock isOpen={isOpen} /> */}
         </nav>
       </aside>
-      <div>
-        <div className="absolute w-[257px] h-[127px] left-[-130.08px] top-[396px] bg-[rgba(249,115,22,0.25)] rounded-[57px_466px_110px_104px] transform rotate-[15.02deg]"></div>
-      </div>
-      <div>
-        <div className="absolute w-[100.33px] h-[65.87px] left-[125px] top-[410px] bg-[rgba(249,115,22,0.5)] rounded-[200px_33px_240px_34px] transform rotate-[-27.77deg]"></div>
-      </div>
-      <div>
-        <div classn="absolute w-[20px] h-[20px] left-[120px] top-[490px] rounded-full bg-[rgba(249,115,22,0.5)]"></div>
-      </div>
     </div>
   );
 };

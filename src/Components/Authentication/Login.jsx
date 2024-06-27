@@ -16,8 +16,8 @@ export const Login = () => {
   const [isLoading, setisLoading] = useState(false);
 
   //Hooks
-  const navigate=useNavigate()
-  const dispatch=useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [login] = useUserLoginMutation();
 
   //useEffects
@@ -31,20 +31,20 @@ export const Login = () => {
     setisLoading(true);
     //api call
     try {
-      const {data,error} = await login(form);
-      console.log("error",error)//backend
-      if(data){
-        console.log(data)
-        dispatch(setUserCredentials(data?.data?.loggedUser))
-        navigate('/dashboard')
+      const { data, error } = await login(form);
+      console.log("error", error); //backend
+      if (data) {
+        console.log(data);
+        dispatch(setUserCredentials(data?.data?.loggedUser));
+        navigate("/dashboard");
       }
-      if(error){
-        console.log(error.message)
-        toast.error(error?.data?.message)
+      if (error) {
+        console.log(error.message);
+        toast.error(error?.data?.message);
       }
     } catch (error) {
-      toast.error("Something went wrong, try again")
-      console.log(error)
+      toast.error("Something went wrong, try again");
+      console.log(error);
     }
 
     //api call
@@ -68,7 +68,9 @@ export const Login = () => {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="email" className=''>Email</Label>
+            <Label htmlFor="email" className="">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -105,7 +107,15 @@ export const Login = () => {
               </Link>
             </span>
           </div>
-          <Button type="submit">{isLoading ?<span className="flex items-center gap-2 "><LoadingIcon/> Loading...</span> : "Login"}</Button>
+          <Button type="submit">
+            {isLoading ? (
+              <span className="flex items-center gap-2 ">
+                <LoadingIcon /> Loading...
+              </span>
+            ) : (
+              "Login"
+            )}
+          </Button>
         </div>
         <p className="text-sm text-center pt-3">
           Don't have account ?{" "}
@@ -114,6 +124,7 @@ export const Login = () => {
           </Link>
         </p>
       </form>
+      <div></div>
     </section>
   );
 };
