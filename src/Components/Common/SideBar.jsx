@@ -4,6 +4,7 @@ import {
   IndianRupeeIcon,
   LayoutDashboardIcon,
   Package2Icon,
+  Truck,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import SidebarItem from "./SidebarItem";
@@ -30,7 +31,7 @@ export const SideBar = () => {
     {
       name: "Orders", //u can see n n add products
       link: "/orders",
-      icon: <Package2Icon className="w-5" />,
+      icon: <Truck />,
     },
   ];
 
